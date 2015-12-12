@@ -1,8 +1,8 @@
 package minesweeper;
 
-/* Main class for the Minesweeper game.
+/** Main class for the Minesweeper game.
  *
- * @author Joshua Goldwasser
+ * @author joshuagoldwasser
  */
 public class Main{
 
