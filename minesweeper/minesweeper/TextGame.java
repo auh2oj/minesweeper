@@ -18,8 +18,7 @@ public class TextGame extends Game {
 		} else if (difficulty == MEDIUM) {
 			movePattern = Pattern.compile("^[a-p](1[0-6]|[1-9])$");
 		} else {
-			movePattern = null;
-			// TODO: fix this case
+			movePattern = Pattern.compile("^[a-x](2[0-2]|1[0-9]|[0-9])$");
 		}
 	}
 
@@ -86,9 +85,6 @@ public class TextGame extends Game {
 	private void display() {
 		System.out.println(board.toString());
 	}
-//
-//	/** Source of input commands from the user. */
-//	private Scanner input;
 	
 	/** Reader for user input. */
 	private BufferedReader input;

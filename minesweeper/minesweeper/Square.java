@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public class Square implements Serializable {
 
+	private static final int MINE_VALUE = 9;
+	
 	/** Creates an unrigged, unrevealed, unflagged square
 	 * with an associated value.
 	 * @param val
@@ -25,7 +27,11 @@ public class Square implements Serializable {
 		revealed = false;
 		flagged = false;
 		hasMine = true;
-		value = 0; // modify this dummy value?
+		value = MINE_VALUE;
+	}
+	
+	int value() {
+		return value;
 	}
 	
 	/** Reveals an unrevealed square. Does nothing if
@@ -33,7 +39,6 @@ public class Square implements Serializable {
 	 */
 	void reveal() {
 		if (revealed) {
-			System.err.println("Square already revealed.");
 			return;
 		}
 		revealed = true;
