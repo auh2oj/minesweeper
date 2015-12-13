@@ -29,6 +29,24 @@ public class Board implements Serializable {
 		boardState = new Square[size][size];
 	}
 	
+	private void makeMove(int c, int r, boolean flagging) {
+		Square target = get(c, r);
+		makeMove(target, flagging);
+	}
+	
+	private void makeMove(String sq, boolean flagging) {
+		Square target = get(sq);
+		makeMove(target, flagging);
+	}
+	
+	private void makeMove(Square square, boolean flagging) {
+		if (flagging) {
+			square.flag();
+		} else {
+			square.reveal();
+		}
+	}
+	
 	private void placeMines() {
 		Random r = new Random();
 		for (int counter = mines; counter > 0; counter--) {
@@ -72,12 +90,20 @@ public class Board implements Serializable {
 	}
 	
 	private Square[] getAdjSquares(int c, int r) {
-		Square[] result = {
-				get(c + 1, r + 1), get(c, r + 1), get(c - 1, r + 1),
-				get(c + 1, r), get(c - 1, r),
-				get(c + 1, r - 1), get(c, r - 1), get(c - 1, r - 1)
-		};
-		// TODO: fix this so that it skips out of bounds squares
+		Square[] result = new Square[8];
+		for (int i = 0; i < result.length; i++) {
+			for (int dc = 1; Math.abs(dc) <= 1; dc--) {
+				for (int dr = 1; Math.abs(dr) <= 1; dr--) {
+					if (dc != 0 && dr != 0) {
+						try {
+							result[i] = get(c + dc, r + dr);
+						} catch (IndexOutOfBoundsException e) {
+							/* do nothing */
+						}
+					}
+				}
+			}
+		}
 		return result;
 	}
 
