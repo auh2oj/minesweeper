@@ -58,6 +58,10 @@ public class Square implements Serializable {
 		return hasMine;
 	}
 	
+	boolean isRevealed() {
+		return revealed;
+	}
+	
 	@Override
 	public String toString() {
 		if (!revealed) {

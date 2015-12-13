@@ -13,11 +13,11 @@ public class Board implements Serializable {
 		if (diff == EASY) {
 			size = 8;
 			mines = 10;
-			ROW_COL = Pattern.compile("[a-h][1-8]");
+			ROW_COL = Pattern.compile("^[a-h][1-8]$");
 		} else if (diff == MEDIUM) {
 			size = 16;
 			mines = 40;
-			ROW_COL = Pattern.compile("[a-p][1-16]");
+			ROW_COL = Pattern.compile("^[a-p](1[0-6]|[1-9])$");
 		} else if (diff == HARD) {
 			size = 64;
 			mines = 99;
@@ -45,6 +45,17 @@ public class Board implements Serializable {
 		} else {
 			square.reveal();
 		}
+	}
+	
+	boolean mineRevealed() {
+		for (int r = 1; r <= size; r++) {
+			for (int c = 1; c <= size; c++) {
+				if (get(c, r).hasMine() && get(c, r).isRevealed()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	private void placeMines() {
