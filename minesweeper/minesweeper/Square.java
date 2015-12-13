@@ -1,11 +1,13 @@
 package minesweeper;
 
+import java.io.Serializable;
+
 /** Represents a single square on the Minesweeper board.
  * 
  * @author joshuagoldwasser
  *
  */
-public class Square {
+public class Square implements Serializable {
 
 	/** Creates an unrigged, unrevealed, unflagged square
 	 * with an associated value.
