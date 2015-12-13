@@ -35,20 +35,44 @@ class Board implements Serializable {
 		initialize(col(sq), row(sq));
 	}
 	
+	/** Places a zero-value square at row R, column C, and
+	 * then places rigged squares at random locations and fills
+	 * the board in with safe squares.
+	 * @param c
+	 * @param r
+	 */
 	private void initialize(int c, int r) {
-		boardState[r - 1][c - 1] = new Square(0);
+		set(c, r, new Square(0));
 		placeMines(c, r);
 		placeSquares();
 	}
 	
+	/** Makes a move. If the target square is null, 
+	 * then the board gets initialized. Otherwise either
+	 * flags or reveals the target square.
+	 * @param c
+	 * @param r
+	 * @param flagging
+	 */
 	void makeMove(int c, int r, boolean flagging) {
 		if (flagging) {
-			get(c, r).flag();
+			Square target = get(c, r);
+			if (target != null) {
+				target.flag();
+				flagCounter++;
+			} else {
+				initialize(c, r);
+			}
+			target.flag();
 			flagCounter++;
-		} else if (get(c, r) == null) {
-			
+		} else {
+			Square target = get(c, r);
+			if (target != null) {
+				reveal(c, r);
+			} else {
+				initialize(c, r);
+			}
 		}
-		reveal(c, r);
 	}
 	
 	void makeMove(String sq, boolean flagging) {
@@ -67,8 +91,12 @@ class Board implements Serializable {
 	boolean mineRevealed() {
 		for (int r = 1; r <= size; r++) {
 			for (int c = 1; c <= size; c++) {
-				if (get(c, r).hasMine() && get(c, r).isRevealed()) {
-					return true;
+				try {
+					if (get(c, r).hasMine() && get(c, r).isRevealed()) {
+						return true;
+					}
+				} catch (NullPointerException e) {
+					/* do nothing */
 				}
 			}
 		}
@@ -166,7 +194,10 @@ class Board implements Serializable {
 	 */
 	private void reveal(int c, int r) {
 		Square square = get(c, r);
-		if (square.value() != 0) {
+		if (square == null) {
+			initialize(c, r);
+			reveal(c, r);
+		} else if (square.value() != 0) {
 			square.reveal();
 			return;
 		} else {
@@ -253,7 +284,7 @@ class Board implements Serializable {
 		}
 		out.format("  ");
 		final String alphabet = "abcdefghijklmnopqrstuvwxyz";
-		for (int i = 1; i <= size; i++) {
+		for (int i = 0; i < size; i++) {
 			out.format(alphabet.charAt(i) + " ");
 		}
 		out.format("  ");
