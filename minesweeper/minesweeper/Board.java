@@ -245,8 +245,9 @@ class Board implements Serializable {
 			for (int c = 1; c <= size; c++) {
 				if (get(c, r) == null) {
 					out.format("- ");
+				} else {
+					out.format("%s ", get(c, r).toString());
 				}
-				out.format("%s ", get(c, r).toString());
 			}
 			out.format("%n");
 		}
