@@ -4,12 +4,15 @@ import static minesweeper.Difficulty.*;
 
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class TextGame extends Game {	
 	
 	protected TextGame(Difficulty difficulty) {
 		super(difficulty);
-		input = new Scanner(System.in);
+		input = new BufferedReader(new InputStreamReader(System.in));
 		if (difficulty == EASY) {
 			movePattern = Pattern.compile("^[a-h][1-8]$");
 		} else if (difficulty == MEDIUM) {
@@ -27,12 +30,16 @@ public class TextGame extends Game {
 			if (gameOver()) {
 				return;
 			}
+			
+			prompt();
+
 			String line = getCommand();
 			if (line == null) {
 				break;
 			}
+			Scanner inp = new Scanner(line);
 			if (!movePattern.matcher(line).matches()) {
-				switch (line) {
+				switch (inp.next()) {
 				case "save":
 					// TODO: add save case
 					break;
@@ -42,10 +49,20 @@ public class TextGame extends Game {
 				case "quit":
 					// TODO: add quit case
 					break;
+				case "flag":
+					String next = inp.next();
+					if (!movePattern.matcher(next).matches()) {
+						System.err.println("Invalid syntax.");
+						break;
+					} else {
+						board.makeMove(next, true);
+					}
 				default:
 					System.err.println("Unknown command.");
 					break;
 				}
+			} else {
+				board.makeMove(line, false);
 			}
 		}
 		
@@ -53,27 +70,28 @@ public class TextGame extends Game {
 	}
 	
 	private String getCommand() {
-		while (true) {
-			System.err.print("> ");
-			System.err.flush();
-			if (!input.hasNext()) {
-				break;
-			}
-			String line = input.nextLine();
-			line = line.trim();
-			if (!line.isEmpty()) {
-				return line;
-			}
+		try {
+			return input.readLine();
+		} catch (IOException e) {
+			System.err.println("unexpected I/O error on input");
+			return null;
 		}
-		return null;
+	}
+	
+	private void prompt() {
+		System.out.print("> ");
+		System.out.flush();
 	}
 	
 	private void display() {
 		System.out.println(board.toString());
 	}
-
-	/** Source of input commands from the user. */
-	private Scanner input;
+//
+//	/** Source of input commands from the user. */
+//	private Scanner input;
+	
+	/** Reader for user input. */
+	private BufferedReader input;
 	
 	/** The format of acceptable move inputs. */
 	private final Pattern movePattern;

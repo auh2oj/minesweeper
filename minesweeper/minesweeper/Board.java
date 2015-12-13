@@ -29,12 +29,12 @@ public class Board implements Serializable {
 		boardState = new Square[size][size];
 	}
 	
-	private void makeMove(int c, int r, boolean flagging) {
+	void makeMove(int c, int r, boolean flagging) {
 		Square target = get(c, r);
 		makeMove(target, flagging);
 	}
 	
-	private void makeMove(String sq, boolean flagging) {
+	void makeMove(String sq, boolean flagging) {
 		Square target = get(sq);
 		makeMove(target, flagging);
 	}
