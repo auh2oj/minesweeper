@@ -3,6 +3,7 @@ package minesweeper;
 import java.io.Serializable;
 import java.util.Random;
 import java.util.regex.Pattern;
+import java.util.Formatter;
 
 import static minesweeper.Difficulty.*;
 
@@ -34,6 +35,8 @@ public class Board implements Serializable {
 			int row = r.nextInt(size), col = r.nextInt(size);
 			if (this.get(col, row) != null) {
 				boardState[row][col] = new Square();
+			} else {
+				counter++;
 			}
 		}
 	}
@@ -111,6 +114,26 @@ public class Board implements Serializable {
 			throw new IllegalArgumentException("bad square designator");
 		}
 		return sq.charAt(1) - '0';
+	}
+	
+	@Override
+	public String toString() {
+		Formatter out = new Formatter();
+		out.format("===%n");
+		for (int r = size; r >= 1; r--) {
+			out.format(Integer.toString(r) + " ");
+			for (int c = 1; c <= size; c ++) {
+				out.format("%s ", get(c, r).toString());
+			}
+			out.format("%n");
+		}
+		out.format("  ");
+		final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+		for (int i = 1; i <= size; i++) {
+			out.format(alphabet.charAt(i) + " ");
+		}
+		out.format("  ");
+		return out.toString();
 	}
 	
 	/** The pattern describing a valid square designator in
