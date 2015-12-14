@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.Formatter;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import static minesweeper.Difficulty.*;
 import static minesweeper.Utils.*;
@@ -41,7 +41,7 @@ class Board implements Serializable {
 	 * @param c
 	 * @param r
 	 */
-	private void initialize(int c, int r) {
+	private void initialize(int c, int r) {	
 		set(c, r, new Square(0));
 		placeMines(c, r);
 		placeSquares();
@@ -71,6 +71,7 @@ class Board implements Serializable {
 				reveal(c, r);
 			} else {
 				initialize(c, r);
+				reveal(c, r);
 			}
 		}
 	}
@@ -104,22 +105,35 @@ class Board implements Serializable {
 	}
 	
 	/** Places mines in a random square, but not on a square
-	 * whose coordinates are r, c. and not on any square that's
+	 * whose coordinates are r, c, and not on any square that's
 	 * adjacent.
 	 * @param c
 	 * @param r
 	 */
 	private void placeMines(int c, int r) {
 		Random random = new Random();
-		int[][] adj =  getAdjCoords(c, r);
+		ArrayList<int[]> adj = getAdjCoords(c, r);
+		
+		for (int[] coords : adj) {
+			System.out.println("column is " + coords[1]);
+			System.out.println("row is " + coords[0]);
+			System.out.println();
+		}
+		
 		for (int counter = mines; counter > 0; counter--) {
-			int row = random.nextInt(size), col = random.nextInt(size);
+			int row = random.nextInt(size) + 1, col = random.nextInt(size) + 1;
 			int[] adjCoord = {row, col};
-			if ((row != r && col != c) && !contains(adj, adjCoord)) {
-				set(col, row, new Square());
-			} else {
+			if (row == r || col == c || adj.contains(adjCoord)) {
 				counter++;
+			} else {
+				set(col, row, new Square());
 			}
+			
+//			if ((row != r && col != c) && !adj.contains(adjCoord)) {
+//				set(col, row, new Square());
+//			} else {
+//				counter++;
+//			}
 		}
 	}
 	
@@ -141,7 +155,7 @@ class Board implements Serializable {
 	 */
 	private int getAdjMines(int c, int r) {
 		int counter = 0;
-		Square[] adjSquares = getAdjSquares(c, r);
+		ArrayList<Square> adjSquares = getAdjSquares(c, r);
 		for (Square sq : adjSquares) {
 			if (sq != null) {
 				if (sq.hasMine()) {
@@ -152,33 +166,38 @@ class Board implements Serializable {
 		return counter;
 	}
 	
-	private Square[] getAdjSquares(int c, int r) {
-		Square[] result = new Square[8];
-		for (int i = 0; i < result.length; i++) {
-			for (int dc = 1; Math.abs(dc) <= 1; dc--) {
-				for (int dr = 1; Math.abs(dr) <= 1; dr--) {
-					if (dc != 0 && dr != 0) {
-						try {
-							result[i] = get(c + dc, r + dr);
-						} catch (IndexOutOfBoundsException e) {
-							/* do nothing */
-						}
-					}
+	private ArrayList<Square> getAdjSquares(int c, int r) {
+		ArrayList<Square> result = new ArrayList<>();
+		for (int dc = 1; Math.abs(dc) <= 1; dc--) {
+			for (int dr = 1; Math.abs(dr) <= 1; dr--) {
+				Square target = get(c + dc, r + dr);
+				if (target != null) {
+					result.add(target);
 				}
 			}
 		}
 		return result;
 	}
 	
-	private int[][] getAdjCoords(int c, int r) {
-		int[][] result = new int[8][2];
-		for (int i = 0; i < result.length; i++) {
+	private ArrayList<int[]> getAdjCoords(int c, int r) {
+		ArrayList<Square> adj = getAdjSquares(c, r);
+		ArrayList<int[]> result = new ArrayList<>();
+		for (int i = 0; i < adj.size(); i++) {
+			result.add(new int[2]);
+		}
+		assert adj.size() == result.size();
+		for (int i = 0; i < result.size(); i++) {
 			for (int dc = 1; Math.abs(dc) <= 1; dc--) {
 				for (int dr = 1; Math.abs(dr) <= 1; dr--) {
-					if (dc != 0 && dr != 0) {
-						result[i][0] = r + dr;
-						result[i][1] = c + dc;
-					}
+					
+					System.out.println("dr is " + dr);
+					System.out.println("dc is " + dc);
+					System.out.println("r + dr is " + (r + dr));
+					System.out.println("c + dc is " + (c + dc));
+					System.out.println();
+					
+					result.get(i)[0] = r + dr;
+					result.get(i)[1] = c + dc;
 				}
 			}
 		}
@@ -194,19 +213,27 @@ class Board implements Serializable {
 	 */
 	private void reveal(int c, int r) {
 		Square square = get(c, r);
-		if (square == null) {
-			initialize(c, r);
-			reveal(c, r);
-		} else if (square.value() != 0) {
+		
+		System.out.println("c is " + c);
+		System.out.println("r is " + r);
+		System.out.println("Square is " + square.value());
+		System.out.println();
+		
+		
+//		if (square == null) {
+//			initialize(c, r);
+//			reveal(c, r);
+//		} else 
+		if (square.value() != 0) {
 			square.reveal();
 			return;
 		} else {
 			square.reveal();
-			int[][] adj = getAdjCoords(c, r);
+			ArrayList<int[]> adj = getAdjCoords(c, r);
 			for (int[] coords : adj) {
 				try {
 					reveal(coords[1], coords[0]);
-				} catch (IndexOutOfBoundsException e) {
+				} catch (IndexOutOfBoundsException | NullPointerException e) {
 					/* do nothing */
 				}
 			}
@@ -222,7 +249,7 @@ class Board implements Serializable {
 	private void set(int c, int r, Square square) {
 		try {
 			boardState[r - 1][c - 1] = square;
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException e) {			
 			return;
 		}
 	}
@@ -306,7 +333,7 @@ class Board implements Serializable {
 	private final Difficulty diff;
 	
 	/** The internal representation of the board. */
-	private final Square[][] boardState;
+	private Square[][] boardState;
 	
 	/** The size of the board. */
 	private final int size;
