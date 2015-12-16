@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.Formatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static minesweeper.Difficulty.*;
 import static minesweeper.Utils.*;
@@ -211,12 +212,6 @@ class Board implements Serializable {
 	 */
 	private void reveal(int c, int r) {
 		Square square = get(c, r);
-		
-		
-//		if (square == null) {
-//			initialize(c, r);
-//			reveal(c, r);
-//		} else 
 		if (square.value() != 0) {
 			square.reveal();
 			return;
@@ -225,7 +220,9 @@ class Board implements Serializable {
 			ArrayList<int[]> adj = getAdjCoords(c, r);
 			for (int[] coords : adj) {
 				try {
-					reveal(coords[1], coords[0]);
+					if (!get(coords[1], coords[0]).isRevealed()) {
+						reveal(coords[1], coords[0]);
+					}
 				} catch (IndexOutOfBoundsException | NullPointerException e) {
 					/* do nothing */
 				}
