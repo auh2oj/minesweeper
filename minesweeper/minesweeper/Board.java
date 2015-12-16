@@ -59,13 +59,30 @@ class Board implements Serializable {
 		if (flagging) {
 			Square target = get(c, r);
 			if (target != null) {
+				if (target.isFlagged()) {
+					target.flag();
+					flagCounter--;
+					return;
+				}
 				target.flag();
+				if (!target.isFlagged()) {
+					return;
+				}
+				
+				System.out.println(target.isFlagged());
+				System.out.println(flagCounter);
+				
 				flagCounter++;
+				
+				System.out.println(flagCounter);
+				System.out.println(mines);
+				System.out.println();
+				
 			} else {
 				initialize(c, r);
+				target.flag();
+				flagCounter++;
 			}
-			target.flag();
-			flagCounter++;
 		} else {
 			Square target = get(c, r);
 			if (target != null) {
@@ -79,15 +96,6 @@ class Board implements Serializable {
 	
 	void makeMove(String sq, boolean flagging) {
 		makeMove(col(sq), row(sq), flagging);
-	}
-	
-	private void makeMove(Square square, boolean flagging) {
-		if (flagging) {
-			square.flag();
-			flagCounter++;
-		} else {
-			square.reveal();
-		}
 	}
 	
 	boolean mineRevealed() {
@@ -114,10 +122,7 @@ class Board implements Serializable {
 	private void placeMines(int c, int r) {
 		Random random = new Random();
 		ArrayList<int[]> adj = getAdjCoords(c, r);
-		
-		for (int[] coords : adj) {
-		}
-		
+
 		for (int counter = mines; counter > 0; counter--) {
 			int row = random.nextInt(size) + 1, col = random.nextInt(size) + 1;
 			int[] adjCoord = {row, col};
@@ -285,7 +290,6 @@ class Board implements Serializable {
 	
 	@Override
 	public String toString() {
-		int flagsRemaining = mines - flagCounter;
 		Formatter out = new Formatter();
 		out.format("===%n");
 		for (int r = size; r >= 1; r--) {
@@ -306,7 +310,7 @@ class Board implements Serializable {
 		}
 		out.format("  ");
 		out.format("%n");
-		out.format("Flags left: %s", flagsRemaining);
+		out.format("Flags left: %d", mines - flagCounter);
 		out.format("%n");
 		return out.toString();
 	}

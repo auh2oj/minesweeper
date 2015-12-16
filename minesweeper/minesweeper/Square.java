@@ -67,6 +67,10 @@ public class Square implements Serializable {
 		return revealed;
 	}
 	
+	boolean isFlagged() {
+		return flagged;
+	}
+	
 	@Override
 	public String toString() {
 		if (!revealed) {

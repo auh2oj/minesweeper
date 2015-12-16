@@ -50,6 +50,9 @@ public class TextGame extends Game {
 					break;
 				case "flag":
 					String next = inp.next();
+					
+					System.out.println(next);
+					
 					Pattern flagPattern;
 					if (movePattern == EASY_PATTERN) {
 						flagPattern = Pattern.compile("[a-h][1-8]$");
