@@ -31,7 +31,7 @@ class Board implements Serializable {
 		flagCounter = 0;
 	}
 	
-	void initalize(String sq) {
+	void init(String sq) {
 		initialize(col(sq), row(sq));
 	}
 	
@@ -115,9 +115,6 @@ class Board implements Serializable {
 		ArrayList<int[]> adj = getAdjCoords(c, r);
 		
 		for (int[] coords : adj) {
-			System.out.println("column is " + coords[1]);
-			System.out.println("row is " + coords[0]);
-			System.out.println();
 		}
 		
 		for (int counter = mines; counter > 0; counter--) {
@@ -128,12 +125,6 @@ class Board implements Serializable {
 			} else {
 				set(col, row, new Square());
 			}
-			
-//			if ((row != r && col != c) && !adj.contains(adjCoord)) {
-//				set(col, row, new Square());
-//			} else {
-//				counter++;
-//			}
 		}
 	}
 	
@@ -179,25 +170,32 @@ class Board implements Serializable {
 		return result;
 	}
 	
-	private ArrayList<int[]> getAdjCoords(int c, int r) {
+	/** Puts coordinates of squares adjacent to square at
+	 * row R, column C into a list.
+	 * @param c
+	 * @param r
+	 * @return
+	 */
+	ArrayList<int[]> getAdjCoords(int c, int r) {
+		//TODO: after testing, make this method private
 		ArrayList<Square> adj = getAdjSquares(c, r);
 		ArrayList<int[]> result = new ArrayList<>();
 		for (int i = 0; i < adj.size(); i++) {
 			result.add(new int[2]);
 		}
 		assert adj.size() == result.size();
-		for (int i = 0; i < result.size(); i++) {
-			for (int dc = 1; Math.abs(dc) <= 1; dc--) {
-				for (int dr = 1; Math.abs(dr) <= 1; dr--) {
-					
-					System.out.println("dr is " + dr);
-					System.out.println("dc is " + dc);
-					System.out.println("r + dr is " + (r + dr));
-					System.out.println("c + dc is " + (c + dc));
-					System.out.println();
-					
+		int i = 0;
+		for (int dc = 1; Math.abs(dc) <= 1; dc--) {
+			for (int dr = 1; Math.abs(dr) <= 1; dr--) {					
+				int row = r + dr;
+				int col = c + dc;
+				if (row != 0 && col != 0) {
 					result.get(i)[0] = r + dr;
 					result.get(i)[1] = c + dc;
+					i++;
+				}
+				if (i >= result.size()) {
+					return result;
 				}
 			}
 		}
@@ -213,11 +211,6 @@ class Board implements Serializable {
 	 */
 	private void reveal(int c, int r) {
 		Square square = get(c, r);
-		
-		System.out.println("c is " + c);
-		System.out.println("r is " + r);
-		System.out.println("Square is " + square.value());
-		System.out.println();
 		
 		
 //		if (square == null) {

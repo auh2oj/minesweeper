@@ -14,11 +14,11 @@ public class TextGame extends Game {
 		super(difficulty);
 		input = new BufferedReader(new InputStreamReader(System.in));
 		if (difficulty == EASY) {
-			movePattern = Pattern.compile("^[a-h][1-8]$");
+			movePattern = EASY_PATTERN;
 		} else if (difficulty == MEDIUM) {
-			movePattern = Pattern.compile("^[a-p](1[0-6]|[1-9])$");
+			movePattern = MEDIUM_PATTERN;
 		} else {
-			movePattern = Pattern.compile("^[a-x](2[0-2]|1[0-9]|[0-9])$");
+			movePattern = HARD_PATTERN;
 		}
 	}
 
@@ -50,11 +50,20 @@ public class TextGame extends Game {
 					break;
 				case "flag":
 					String next = inp.next();
-					if (!movePattern.matcher(next).matches()) {
+					Pattern flagPattern;
+					if (movePattern == EASY_PATTERN) {
+						flagPattern = Pattern.compile("[a-h][1-8]$");
+					} else if (movePattern == MEDIUM_PATTERN) {
+						flagPattern = Pattern.compile("[a-p](1[0-6]|[1-9])$");
+					} else {
+						flagPattern = Pattern.compile("[a-x](2[0-2]|1[0-9]|[0-9])$");
+					}
+					if (!flagPattern.matcher(next).matches()) {
 						System.err.println("Invalid syntax.");
 						break;
 					} else {
 						board.makeMove(next, true);
+						break;
 					}
 				default:
 					System.err.println("Unknown command.");
@@ -91,4 +100,9 @@ public class TextGame extends Game {
 	
 	/** The format of acceptable move inputs. */
 	private final Pattern movePattern;
+	
+	/** The format of acceptable move inputs for each difficulty. */
+	private static final Pattern EASY_PATTERN = Pattern.compile("^[a-h][1-8]$");
+	private static final Pattern MEDIUM_PATTERN = Pattern.compile("^[a-p](1[0-6]|[1-9])$");
+	private static final Pattern HARD_PATTERN = Pattern.compile("^[a-x](2[0-2]|1[0-9]|[0-9])$");
 }
