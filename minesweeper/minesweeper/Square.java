@@ -75,7 +75,7 @@ public class Square implements Serializable {
 	public String toString() {
 		if (!revealed) {
 			if (flagged) {
-				return "f";
+				return "F";
 			}
 			return "-";
 		} else {

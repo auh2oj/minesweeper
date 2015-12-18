@@ -30,6 +30,7 @@ class Board implements Serializable {
 		}
 		boardState = new Square[size][size];
 		flagCounter = 0;
+		squaresRevealed = 0;
 	}
 	
 	void init(String sq) {
@@ -68,18 +69,10 @@ class Board implements Serializable {
 				if (!target.isFlagged()) {
 					return;
 				}
-				
-				System.out.println(target.isFlagged());
-				System.out.println(flagCounter);
-				
 				flagCounter++;
-				
-				System.out.println(flagCounter);
-				System.out.println(mines);
-				System.out.println();
-				
 			} else {
 				initialize(c, r);
+				target = get(c, r);
 				target.flag();
 				flagCounter++;
 			}
@@ -113,6 +106,10 @@ class Board implements Serializable {
 		return false;
 	}
 	
+	boolean safeSquaresRevealed() {
+		return squaresRevealed == size * size - mines;
+	}
+	
 	/** Places mines in a random square, but not on a square
 	 * whose coordinates are r, c, and not on any square that's
 	 * adjacent.
@@ -126,7 +123,7 @@ class Board implements Serializable {
 		for (int counter = mines; counter > 0; counter--) {
 			int row = random.nextInt(size) + 1, col = random.nextInt(size) + 1;
 			int[] adjCoord = {row, col};
-			if (row == r || col == c || adj.contains(adjCoord)) {
+			if (adj.contains(adjCoord) || get(col, row) != null) {
 				counter++;
 			} else {
 				set(col, row, new Square());
@@ -219,6 +216,7 @@ class Board implements Serializable {
 		Square square = get(c, r);
 		if (square.value() != 0) {
 			square.reveal();
+			squaresRevealed++;
 			return;
 		} else {
 			square.reveal();
@@ -293,7 +291,11 @@ class Board implements Serializable {
 		Formatter out = new Formatter();
 		out.format("===%n");
 		for (int r = size; r >= 1; r--) {
-			out.format(Integer.toString(r) + " ");
+			if (r < 10) {
+				out.format(" " + Integer.toString(r) + " ");
+			} else {
+				out.format(Integer.toString(r) + " ");
+			}
 			for (int c = 1; c <= size; c++) {
 				if (get(c, r) == null) {
 					out.format("- ");
@@ -305,6 +307,7 @@ class Board implements Serializable {
 		}
 		out.format("  ");
 		final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+		out.format(" ");
 		for (int i = 0; i < size; i++) {
 			out.format(alphabet.charAt(i) + " ");
 		}
@@ -317,6 +320,9 @@ class Board implements Serializable {
 	
 	/** The number of flags in use. */
 	private int flagCounter;
+	
+	/** The number of non-rigged squares revealed. */
+	private int squaresRevealed;
 	
 	/** The pattern describing a valid square designator in
 	 * the form cr.

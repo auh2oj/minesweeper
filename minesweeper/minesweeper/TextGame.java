@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 public class TextGame extends Game {	
 	
@@ -31,51 +32,53 @@ public class TextGame extends Game {
 			}
 			
 			prompt();
-
-			String line = getCommand();
-			if (line == null) {
-				break;
-			}
-			Scanner inp = new Scanner(line);
-			if (!movePattern.matcher(line).matches()) {
-				switch (inp.next()) {
-				case "save":
-					// TODO: add save case
-					break;
-				case "load":
-					// TODO: add load case
-					break;
-				case "quit":
-					// TODO: add quit case
-					break;
-				case "flag":
-					String next = inp.next();
-					
-					System.out.println(next);
-					
-					Pattern flagPattern;
-					if (movePattern == EASY_PATTERN) {
-						flagPattern = Pattern.compile("[a-h][1-8]$");
-					} else if (movePattern == MEDIUM_PATTERN) {
-						flagPattern = Pattern.compile("[a-p](1[0-6]|[1-9])$");
-					} else {
-						flagPattern = Pattern.compile("[a-x](2[0-2]|1[0-9]|[0-9])$");
-					}
-					if (!flagPattern.matcher(next).matches()) {
-						System.err.println("Invalid syntax.");
-						break;
-					} else {
-						board.makeMove(next, true);
-						break;
-					}
-				default:
-					System.err.println("Unknown command.");
+			
+			try {
+				String line = getCommand();
+				if (line == null) {
 					break;
 				}
-			} else {
-				board.makeMove(line, false);
+				line = line.trim();
+				Scanner inp = new Scanner(line);
+				if (!movePattern.matcher(line).matches()) {
+					switch (inp.next()) {
+					case "save":
+						// TODO: add save case
+						break;
+					case "load":
+						// TODO: add load case
+						break;
+					case "quit":
+						System.exit(1);
+						break;
+					case "flag":
+						String next = inp.next();
+						Pattern flagPattern;
+						if (movePattern == EASY_PATTERN) {
+							flagPattern = Pattern.compile("[a-h][1-8]$");
+						} else if (movePattern == MEDIUM_PATTERN) {
+							flagPattern = Pattern.compile("[a-p](1[0-6]|[1-9])$");
+						} else {
+							flagPattern = Pattern.compile("[a-x](2[0-2]|1[0-9]|[0-9])$");
+						}
+						if (!flagPattern.matcher(next).matches()) {
+							System.err.println("Invalid syntax.");
+							break;
+						} else {
+							board.makeMove(next, true);
+							break;
+						}
+					default:
+						System.err.println("Unknown command.");
+						break;
+					}
+				} else {
+					board.makeMove(line, false);
+				}
+			} catch (NoSuchElementException e) {
+				/* do nothing */
 			}
-		}
+		} // end while
 		
 		
 	}

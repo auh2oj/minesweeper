@@ -15,8 +15,8 @@ abstract class Game {
 	abstract void play();
 	
 	boolean gameOver() {
-		return board.mineRevealed();
-		// TODO: add the win case
+		return board.mineRevealed()
+				|| board.safeSquaresRevealed();
 	}
 	
 	Board getBoard() {

@@ -9,11 +9,9 @@ public class UnitTests {
 
 	public static void testGetAdjCoords() {
 		Board b = new Board(EASY);
-		b.init("a1");
-		
-		System.out.println(b);
-		
-		ArrayList<int[]> adj = b.getAdjCoords(1, 1);
+		b.init("c3");
+				
+		ArrayList<int[]> adj = b.getAdjCoords(3, 3);
 		
 		for (int[] coord : adj) {
 			System.out.println(Arrays.toString(coord));
