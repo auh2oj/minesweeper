@@ -96,6 +96,7 @@ class Board implements Serializable {
 			for (int c = 1; c <= size; c++) {
 				try {
 					if (get(c, r).hasMine() && get(c, r).isRevealed()) {
+						isWon = false;
 						return true;
 					}
 				} catch (NullPointerException e) {
@@ -107,7 +108,11 @@ class Board implements Serializable {
 	}
 	
 	boolean safeSquaresRevealed() {
-		return squaresRevealed == size * size - mines;
+		boolean req = squaresRevealed == size * size - mines;
+		if (req) {
+			isWon = true;
+		}
+		return req;
 	}
 	
 	/** Places mines in a random square, but not on a square
@@ -123,12 +128,29 @@ class Board implements Serializable {
 		for (int counter = mines; counter > 0; counter--) {
 			int row = random.nextInt(size) + 1, col = random.nextInt(size) + 1;
 			int[] adjCoord = {row, col};
-			if (adj.contains(adjCoord) || get(col, row) != null) {
+			if (containsCoords(adjCoord, adj) || get(col, row) != null) {
+
+				System.out.println("shouldn't be here");
+				
 				counter++;
 			} else {
 				set(col, row, new Square());
 			}
 		}
+	}
+	
+	/** Checks if a given set of COORDS is in an array LIST
+	 * of coordinates.
+	 */
+	private boolean containsCoords(int[] coords, 
+			ArrayList<int[]> list) {
+		int counter = 0;
+		for (int[] elem : list) {
+			if (Arrays.equals(coords, elem)) {
+				counter++;
+			}
+		}
+		return counter != 0;
 	}
 	
 	private void placeSquares() {
@@ -192,9 +214,9 @@ class Board implements Serializable {
 			for (int dr = 1; Math.abs(dr) <= 1; dr--) {					
 				int row = r + dr;
 				int col = c + dc;
-				if (row != 0 && col != 0) {
-					result.get(i)[0] = r + dr;
-					result.get(i)[1] = c + dc;
+				if (inBounds(col, row)) {
+					result.get(i)[0] = row;
+					result.get(i)[1] = col;
 					i++;
 				}
 				if (i >= result.size()) {
@@ -231,6 +253,10 @@ class Board implements Serializable {
 				}
 			}
 		}
+	}
+	
+	private boolean inBounds(int c, int r) {
+		return (1 <= c && c <= size) && (1 <= r && r <= size);
 	}
 	
 	/** Sets the square at column C, row R to be SQUARE.
@@ -284,6 +310,10 @@ class Board implements Serializable {
 			throw new IllegalArgumentException("bad square designator");
 		}
 		return sq.charAt(1) - '0';
+	}
+	
+	boolean isWon() {
+		return isWon;
 	}
 	
 	@Override
@@ -340,4 +370,7 @@ class Board implements Serializable {
 	
 	/** The number of mines on the board. */
 	private final int mines;
+	
+	/** Whether the game has been won or lost. */
+	private boolean isWon;
 }

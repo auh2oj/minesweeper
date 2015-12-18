@@ -28,6 +28,12 @@ public class TextGame extends Game {
 		while (true) {
 			display();
 			if (gameOver()) {
+				if (board.isWon()) {
+					System.out.println("You won!");
+				} else {
+					System.out.println("You lost!");
+				}
+				System.out.println();
 				return;
 			}
 			
