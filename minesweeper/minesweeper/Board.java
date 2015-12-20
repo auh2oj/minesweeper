@@ -309,6 +309,9 @@ class Board implements Serializable {
 		if (!ROW_COL.matcher(sq).matches()) {
 			throw new IllegalArgumentException("bad square designator");
 		}
+		if (sq.length() == 3) {
+			return Integer.parseInt(sq.substring(1));
+		}
 		return sq.charAt(1) - '0';
 	}
 	
