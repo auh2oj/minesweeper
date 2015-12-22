@@ -319,6 +319,26 @@ class Board implements Serializable {
 		return isWon;
 	}
 	
+	boolean allRevealed() {
+		try {
+			int counter = 0;
+			for (int r = 1; r <= size; r++) {
+				for (int c = 1; c <= size; c++) {
+					if (get(c, r).isRevealed() && !get(c, r).hasMine()) {
+						counter++;
+					}
+				}
+			}
+			boolean req = counter == size * size - mines;
+			if (req) {
+				isWon = true;
+			}
+			return req;
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		Formatter out = new Formatter();

@@ -16,7 +16,7 @@ abstract class Game {
 	
 	boolean gameOver() {
 		return board.mineRevealed()
-				|| board.safeSquaresRevealed();
+				|| board.allRevealed();
 	}
 	
 	Board getBoard() {

@@ -38,7 +38,7 @@ public class Square implements Serializable {
 	 * the square is already revealed.
 	 */
 	void reveal() {
-		if (revealed) {
+		if (revealed || flagged) {
 			return;
 		}
 		revealed = true;
