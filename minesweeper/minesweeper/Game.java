@@ -27,5 +27,5 @@ abstract class Game {
 	protected Board board;
 	
 	/** This game's difficulty. */
-	private final Difficulty diff;
+	protected final Difficulty diff;
 }

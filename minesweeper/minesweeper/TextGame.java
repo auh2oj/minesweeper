@@ -46,6 +46,7 @@ public class TextGame extends Game {
 				}
 				line = line.trim();
 				Scanner inp = new Scanner(line);
+				String next;
 				if (!movePattern.matcher(line).matches()) {
 					switch (inp.next()) {
 					case "save":
@@ -54,11 +55,20 @@ public class TextGame extends Game {
 					case "load":
 						// TODO: add load case
 						break;
+					case "new":
+						next = inp.next();
+						System.out.println(next);
+						if (next.equals("game")) {
+							board = new Board(diff);
+						} else {
+							System.err.println("Unknown command");
+						}
+						break;
 					case "quit":
 						System.exit(1);
 						break;
 					case "flag":
-						String next = inp.next();
+						next = inp.next();
 						Pattern flagPattern;
 						if (movePattern == EASY_PATTERN) {
 							flagPattern = Pattern.compile("[a-h][1-8]$");
