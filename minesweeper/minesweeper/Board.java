@@ -127,11 +127,8 @@ class Board implements Serializable {
 
 		for (int counter = mines; counter > 0; counter--) {
 			int row = random.nextInt(size) + 1, col = random.nextInt(size) + 1;
-			int[] adjCoord = {row, col};
+			int[] adjCoord = {row, col};			
 			if (containsCoords(adjCoord, adj) || get(col, row) != null) {
-
-				System.out.println("shouldn't be here");
-				
 				counter++;
 			} else {
 				set(col, row, new Square());
@@ -144,13 +141,12 @@ class Board implements Serializable {
 	 */
 	private boolean containsCoords(int[] coords, 
 			ArrayList<int[]> list) {
-		int counter = 0;
 		for (int[] elem : list) {
 			if (Arrays.equals(coords, elem)) {
-				counter++;
+				return true;
 			}
 		}
-		return counter != 0;
+		return false;
 	}
 	
 	private void placeSquares() {
