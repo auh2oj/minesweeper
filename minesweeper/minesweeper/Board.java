@@ -127,8 +127,8 @@ class Board implements Serializable {
 
 		for (int counter = mines; counter > 0; counter--) {
 			int row = random.nextInt(size) + 1, col = random.nextInt(size) + 1;
-			int[] adjCoord = {row, col};			
-			if (containsCoords(adjCoord, adj) || get(col, row) != null) {
+			int[] adjCoord = {row, col};
+			if (containsCoords(adjCoord, adj)) {
 				counter++;
 			} else {
 				set(col, row, new Square());
@@ -139,8 +139,7 @@ class Board implements Serializable {
 	/** Checks if a given set of COORDS is in an array LIST
 	 * of coordinates.
 	 */
-	private boolean containsCoords(int[] coords, 
-			ArrayList<int[]> list) {
+	private boolean containsCoords(int[] coords, ArrayList<int[]> list) {
 		for (int[] elem : list) {
 			if (Arrays.equals(coords, elem)) {
 				return true;
@@ -199,24 +198,36 @@ class Board implements Serializable {
 	 */
 	ArrayList<int[]> getAdjCoords(int c, int r) {
 		//TODO: after testing, make this method private
-		ArrayList<Square> adj = getAdjSquares(c, r);
+//		ArrayList<Square> adj = getAdjSquares(c, r);
+//		ArrayList<int[]> result = new ArrayList<>();
+//		for (int i = 0; i < adj.size(); i++) {
+//			result.add(new int[2]);
+//		}
+//		assert adj.size() == result.size();
+//		int i = 0;
+//		for (int dc = 1; Math.abs(dc) <= 1; dc--) {
+//			for (int dr = 1; Math.abs(dr) <= 1; dr--) {					
+//				int row = r + dr;
+//				int col = c + dc;
+//				if (inBounds(col, row)) {
+//					result.get(i)[0] = row;
+//					result.get(i)[1] = col;
+//					i++;
+//				}
+//				if (i >= result.size()) {
+//					return result;
+//				}
+//			}
+//		}
+//		return result;
+		
 		ArrayList<int[]> result = new ArrayList<>();
-		for (int i = 0; i < adj.size(); i++) {
-			result.add(new int[2]);
-		}
-		assert adj.size() == result.size();
-		int i = 0;
 		for (int dc = 1; Math.abs(dc) <= 1; dc--) {
 			for (int dr = 1; Math.abs(dr) <= 1; dr--) {					
 				int row = r + dr;
 				int col = c + dc;
 				if (inBounds(col, row)) {
-					result.get(i)[0] = row;
-					result.get(i)[1] = col;
-					i++;
-				}
-				if (i >= result.size()) {
-					return result;
+					result.add(new int[] {row, col});
 				}
 			}
 		}
