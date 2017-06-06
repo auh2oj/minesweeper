@@ -197,30 +197,6 @@ class Board implements Serializable {
 	 * @return
 	 */
 	ArrayList<int[]> getAdjCoords(int c, int r) {
-		//TODO: after testing, make this method private
-//		ArrayList<Square> adj = getAdjSquares(c, r);
-//		ArrayList<int[]> result = new ArrayList<>();
-//		for (int i = 0; i < adj.size(); i++) {
-//			result.add(new int[2]);
-//		}
-//		assert adj.size() == result.size();
-//		int i = 0;
-//		for (int dc = 1; Math.abs(dc) <= 1; dc--) {
-//			for (int dr = 1; Math.abs(dr) <= 1; dr--) {					
-//				int row = r + dr;
-//				int col = c + dc;
-//				if (inBounds(col, row)) {
-//					result.get(i)[0] = row;
-//					result.get(i)[1] = col;
-//					i++;
-//				}
-//				if (i >= result.size()) {
-//					return result;
-//				}
-//			}
-//		}
-//		return result;
-		
 		ArrayList<int[]> result = new ArrayList<>();
 		for (int dc = 1; Math.abs(dc) <= 1; dc--) {
 			for (int dr = 1; Math.abs(dr) <= 1; dr--) {					
