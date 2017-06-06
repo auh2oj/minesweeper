@@ -22,7 +22,7 @@ The design was heavily inspired by the Android Minesweeper game.
 
 The grid on the command line in the text mode on Easy mode at the start of the game appears thus:
 
-===
+===  
  8 - - - - - - - -  
  7 - - - - - - - -  
  6 - - - - - - - -  
