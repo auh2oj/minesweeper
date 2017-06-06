@@ -23,14 +23,14 @@ The design was heavily inspired by the Android Minesweeper game.
 The grid on the command line in the text mode on Easy mode at the start of the game appears thus:
 
 ===
- 8 - - - - - - - - 
- 7 - - - - - - - - 
- 6 - - - - - - - - 
- 5 - - - - - - - - 
- 4 - - - - - - - - 
- 3 - - - - - - - - 
- 2 - - - - - - - - 
- 1 - - - - - - - - 
+ 8 - - - - - - - -  
+ 7 - - - - - - - -  
+ 6 - - - - - - - -  
+ 5 - - - - - - - -  
+ 4 - - - - - - - -  
+ 3 - - - - - - - -  
+ 2 - - - - - - - -  
+ 1 - - - - - - - -  
    a b c d e f g h   
 Flags left: 10
 
